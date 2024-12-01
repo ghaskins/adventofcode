@@ -5,18 +5,16 @@
   (->> (slurp "inputs/day1.txt")
        (string/split-lines)
        (map #(map parse-long (string/split % #"\s+")))
-       (reduce (fn [[lacc racc] [left right]] [(conj lacc left) (conj racc right)]) [[] []])
+       (reduce (fn [acc items] (mapv conj acc items)) [[] []])
        (map sort)))
 
 (defn part1 []
   (let [[left right] (parse)]
-    (->> (zipmap left right)
-         (map (fn [[left right]]
-                (abs (- left right))))
+    (->> (map (comp abs -) left right)
          (reduce + 0))))
 
 (defn part2 []
-  (let [[left right] (parse)]
-    (let [f (frequencies right)]
-      (->> (map (fn [l] (* l (get f l 0))) left)
-           (reduce + 0)))))
+  (let [[left right] (parse)
+        f (frequencies right)]
+    (->> (map #(* % (get f % 0)) left)
+         (reduce + 0))))
