@@ -1,0 +1,14 @@
+<simple> ::= (ws mul)* ws?
+<conditional> ::= (aws mul)* aws?
+
+mul ::= (<"mul("> digit <","> digit <")">)
+<ignore> ::= stop (!start any)* (start | eol)
+
+<stop> ::= <"don't()">
+<start> ::= <"do()">
+
+<digit> ::= #"\d+"
+<ws> ::= (!mul any)*
+<aws> ::= (ignore / (!mul !ignore any))*
+<eol> ::= #"$"
+<any> ::= <#"."> | <#"\n">

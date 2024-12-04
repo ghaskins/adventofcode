@@ -1,5 +1,6 @@
 (ns aoc.2024.day2
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string]
+            [aoc.utils :refer [remove-nth]]))
 
 (defn parse []
   (->> (slurp "inputs/day2.txt")
@@ -32,10 +33,6 @@
          (filter result-true?)
          (count))))
 
-(defn remove-nth [n coll]
-  (->> (map-indexed vector coll)
-       (remove (comp #(= n %) first))
-       (map second)))
 
 (defn dampen [{:keys [result report] :as x}]
   (if (false? result)
