@@ -7,7 +7,7 @@ mul ::= (<"mul("> digit <","> digit <")">)
 <stop> ::= <"don't()">
 <start> ::= <"do()">
 
-<digit> ::= #"\d+"
+<digit> ::= #"\d{1,3}"
 <ws> ::= (!mul any)*
 <aws> ::= (ignore / (!mul !ignore any))*
 <eol> ::= #"$"
