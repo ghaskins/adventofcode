@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [dev.weavejester/medley "1.8.0"]
                  [org.clojure/math.combinatorics "0.3.0"]
+                 [net.mikera/core.matrix "0.63.0"]
                  [instaparse "1.5.0"]]
   :repl-options {:init-ns user}
   :profiles {:dev     {:dependencies   [[org.clojure/tools.namespace "1.5.0"]
