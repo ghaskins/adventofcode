@@ -1,15 +1,11 @@
 (ns aoc.2024.day4.part2
   (:require [clojure.string :as string]
             [clojure.data :refer [diff]]
-            [aoc.2024.day4.common :refer [parse] :as c]))
+            [aoc.2024.day4.common :refer [parse] :as c]
+            [aoc.utils :as utils]))
 
 (defn find-occurrences [row]
-  (loop [m (->> (string/join row)
-                (re-matcher #"M(?=AS)|S(?=AM)"))
-         r #{}]
-    (if (.find m)
-      (recur m (conj r (inc (.start m))))
-      r)))
+  (utils/find-occurrences #"M(?=AS)|S(?=AM)" (string/join row)))
 
 (defn analyze-row [row]
   (let [positions (mapv :pos row)
