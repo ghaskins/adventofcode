@@ -32,7 +32,7 @@
 
 (defn topsort [rules update]
   (let [update (set update)]
-    (->> (filter (fn [[k _]] (contains? update k)) rules)
+    (->> (filter (comp update first) rules)
          (mapcat second)
          (apply uber/digraph)
          (uber.alg/topsort))))
@@ -46,6 +46,10 @@
   (let [weights (compute-weights rules update)]
     (->> (map (fn [entry] (get weights entry)) update)
          (apply <))))
+
+(defn reorder [rules update]
+  (let [weights (compute-weights rules update)]
+    (sort-by #(get weights %) update)))
 
 (defn get-middle-page [update]
   (nth update (/ (count update) 2)))
@@ -63,6 +67,4 @@
 (defn part2 []
   (process (fn [{:keys [rules updates]}]
              (->> (remove (partial correct-order? rules) updates)
-                  (mapv (fn [update]
-                          (let [weights (compute-weights rules update)]
-                            (sort-by #(get weights %) update))))))))
+                  (mapv (partial reorder rules))))))
