@@ -5,9 +5,7 @@
             [aoc.utils :as utils]))
 
 (defn find-split [input]
-  (let [x (utils/find-occurrences #"(?m)^\s" input)]
-    (assert (= (count x) 1))
-    (first x)))
+  (first (utils/find-occurrences #"(?m)^\s" input)))
 
 (defn parse-entries [re s]
   (->> (string/split-lines s)
@@ -44,7 +42,7 @@
 
 (defn correct-order? [rules update]
   (let [weights (compute-weights rules update)]
-    (->> (map (fn [entry] (get weights entry)) update)
+    (->> (map #(get weights %) update)
          (apply <))))
 
 (defn reorder [rules update]
