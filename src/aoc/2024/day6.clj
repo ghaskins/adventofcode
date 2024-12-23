@@ -31,6 +31,7 @@
   (and (every? not-neg? pos)
        (< x width)
        (< y height)))
+(def out-of-bounds? (complement in-bounds?))
 
 (defn obstructed? [{:keys [data] :as input} [x y :as pos]]
   (true? (some-> data (get-in [y x]) (= \#))))
@@ -70,13 +71,9 @@
   (let [input (parse)]
     (->> (patrol input)
          :visits
-         (mapcat (fn [[pos directions]]
-                   (mapv (partial advance-pos pos) directions)))
-         (remove nil?)
-         (filter (partial in-bounds? input))
-         (remove (some-fn (partial obstructed? input) (partial startpos? input)))
+         (mapcat (fn [[pos directions]] (mapv #(advance-pos pos %) directions)))
          (distinct)
-         (pmap (fn [candidate-pos]
-                 (:loop? (patrol (update input :data #(assoc-in % (reverse candidate-pos) \#))))))
-         (filter true?)
+         (remove (some-fn #(out-of-bounds? input %) #(obstructed? input %) #(startpos? input %)))
+         (pmap (fn [candidate-pos] (patrol (update input :data #(assoc-in % (reverse candidate-pos) \#)))))
+         (filter :loop?)
          (count))))
