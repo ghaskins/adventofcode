@@ -25,13 +25,10 @@
     :down  :left
     :left  :up))
 
-(def not-neg? (complement neg?))
-
-(defn in-bounds? [{:keys [width height] :as input} [x y :as pos]]
-  (and (every? not-neg? pos)
-       (< x width)
-       (< y height)))
-(def out-of-bounds? (complement in-bounds?))
+(defn out-of-bounds? [{:keys [width height] :as input} [x y :as pos]]
+  (or (some neg? pos)
+      (>= x width)
+      (>= y height)))
 
 (defn obstructed? [{:keys [data] :as input} [x y :as pos]]
   (true? (some-> data (get-in [y x]) (= \#))))
@@ -52,11 +49,11 @@
     (let [visits (update visits current-pos (fn [entry] (conj (or entry #{}) current-direction)))
           candidate-pos (advance-pos current-pos current-direction)
           {:keys [stop? loop? next-pos next-direction] :or {stop? false loop? false next-direction current-direction}}
-          (match [(previously-visited? visits candidate-pos current-direction) (in-bounds? input candidate-pos) (obstructed? input candidate-pos)]
+          (match [(previously-visited? visits candidate-pos current-direction) (out-of-bounds? input candidate-pos) (obstructed? input candidate-pos)]
                  [true  _     _]     {:stop? true :loop? true}
-                 [false false _]     {:stop? true}
-                 [false true  false] {:next-pos candidate-pos}
-                 [false true  true]  {:next-pos current-pos :next-direction (rotate-right current-direction)})]
+                 [false true  _]     {:stop? true}
+                 [false false false] {:next-pos candidate-pos}
+                 [false false true]  {:next-pos current-pos :next-direction (rotate-right current-direction)})]
       (if stop?
         {:loop? loop? :visits visits}
         (recur next-pos next-direction visits)))))
