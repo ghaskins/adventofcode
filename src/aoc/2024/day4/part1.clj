@@ -1,7 +1,8 @@
 (ns aoc.2024.day4.part1
   (:require [clojure.string :as string]
             [clojure.core.matrix :as matrix]
-            [aoc.2024.day4.common :refer [parse] :as c]))
+            [aoc.2024.day4.common  :as c]
+            [aoc.utils :refer [parse-matrix]]))
 
 (defn count-row [row]
   (->> (string/join row)
@@ -20,7 +21,7 @@
 
 (defn run []
   (->> (slurp "inputs/day4.txt")
-       (parse)
+       (parse-matrix)
        ((juxt horizontal vertical c/transform-rh-diag c/transform-lh-diag))
        (map count-occurrences)
        (reduce + 0)))
