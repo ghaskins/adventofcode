@@ -28,3 +28,8 @@
   (mapv-indexed (fn [i row]
                   (mapv-indexed (fn [j x] {:pos [j i] :element x}) row))
                 data))
+
+(defn out-of-bounds? [{:keys [width height] :as input} [x y :as pos]]
+  (or (some neg? pos)
+      (>= x width)
+      (>= y height)))

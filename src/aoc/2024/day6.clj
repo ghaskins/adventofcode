@@ -1,6 +1,6 @@
 (ns aoc.2024.day6
   (:require [clojure.core.match :refer [match]]
-            [aoc.utils :refer [parse-matrix index-elements] :as utils]))
+            [aoc.utils :refer [parse-matrix index-elements out-of-bounds?] :as utils]))
 
 (defn find-start [{:keys [data]}]
   (->> (apply concat (index-elements data))
@@ -24,11 +24,6 @@
     :right :down
     :down  :left
     :left  :up))
-
-(defn out-of-bounds? [{:keys [width height] :as input} [x y :as pos]]
-  (or (some neg? pos)
-      (>= x width)
-      (>= y height)))
 
 (defn obstructed? [{:keys [data] :as input} [x y :as pos]]
   (true? (some-> data (get-in [y x]) (= \#))))
